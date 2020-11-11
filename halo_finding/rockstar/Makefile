@@ -8,8 +8,8 @@ CFILES = rockstar.c check_syscalls.c fof.c groupies.c subhalo_metric.c potential
 DIST_FLAGS =
 
 # HDF% libs for Lux
-HDF5_INCL = 
-HDF5_LIBS =  -lhdf5
+HDF5_INCL = /cm/shared/apps/hdf5/1.10.6/include
+HDF5_LIBS = /cm/shared/apps/hdf5/1.10.6/lib -lhdf5
 HDF5_FLAGS = -DH5_USE_16_API -lhdf5 -DENABLE_HDF5 -I$(HDF5_INCL) -L$(HDF5_LIBS)
 
 all:
