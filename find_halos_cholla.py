@@ -11,7 +11,7 @@ nProc = MPIcomm.Get_size()
 
 
 dataDir = '/data/groups/comp-astro/bruno/'
-simulationDir = dataDir + 'cosmo_sims/cholla_pm/256_dm_50Mpc/'
+simulationDir = dataDir + 'cosmo_sims/256_dm_50Mpc/'
 inDir = simulationDir + 'output_files/'
 outDir = simulationDir + 'halo_files/'
 if pId == 0: create_directory(outDir)
