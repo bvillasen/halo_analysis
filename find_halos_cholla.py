@@ -14,7 +14,7 @@ dataDir = '/data/groups/comp-astro/bruno/cosmo_sims/256'
 simulationDir = dataDir + 'cosmo_sims/cholla_pm/256_dm_50Mpc/'
 inDir = simulationDir + 'output_files/'
 outDir = simulationDir + 'halo_files/'
-if pId == 0: create_directory = outDir
+if pId == 0: create_directory(outDir)
 
 
 cwd = os.getcwd() 
