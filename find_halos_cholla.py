@@ -10,7 +10,7 @@ pId = MPIcomm.Get_rank()
 nProc = MPIcomm.Get_size()
 
 
-dataDir = '/data/groups/comp-astro/bruno/cosmo_sims/256'
+dataDir = '/data/groups/comp-astro/bruno/'
 simulationDir = dataDir + 'cosmo_sims/cholla_pm/256_dm_50Mpc/'
 inDir = simulationDir + 'output_files/'
 outDir = simulationDir + 'halo_files/'
