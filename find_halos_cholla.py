@@ -24,7 +24,7 @@ rockstarComand = rockstarDir + 'rockstar'
 rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
 'TOTAL_PARTICLES': 256**3,
-'BOX_SIZE': 50,                          #Mpc/h
+'BOX_SIZE': 50.0,                          #Mpc/h
 'FORCE_RES': 50./256 / 10 ,                    #Mpc/h
 'OUTBASE': outDir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
