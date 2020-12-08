@@ -41,7 +41,7 @@ parallelConf = {
 # 'BGC2_SNAPNAMES': dataDir + 'halos/snaps_names.txt',
 'NUM_WRITERS': 8,                             #<number of CPUs>
 'FORK_READERS_FROM_WRITERS': 1,
-'FORK_PROCESSORS_PER_MACHINE': 40,             #<number of processors per node>
+'FORK_PROCESSORS_PER_MACHINE': 5,             #<number of processors per node>
 }
 
 if pId == 0:
