@@ -24,8 +24,8 @@ rockstarComand = rockstarDir + 'rockstar'
 rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
 'TOTAL_PARTICLES': 256**3,
-'BOX_SIZE': 50,                          #Mpc/h
-'FORCE_RES': 50./256,                    #Mpc/h
+'BOX_SIZE': 50.0,                          #Mpc/h
+'FORCE_RES': 50./256 / 10 ,                    #Mpc/h
 'OUTBASE': outDir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
 }
@@ -34,8 +34,8 @@ parallelConf = {
 'PERIODIC': 1,                                  #periodic boundary conditions
 'INBASE':  inDir ,                              #input directory
 'NUM_BLOCKS': 8,                                # <number of files per snapshot>
-'NUM_SNAPS': 27,                               # <total number of snapshots> 
-'STARTING_SNAP': 26,
+'NUM_SNAPS': 300,                               # <total number of snapshots> 
+'STARTING_SNAP': 0,
 'FILENAME': '"<snap>_particles.h5.<block>"',              #"my_sim.<snap>.<block>"
 # 'SNAPSHOT_NAMES': dataDir + 'halos/snaps_names.txt',
 # 'BGC2_SNAPNAMES': dataDir + 'halos/snaps_names.txt',
