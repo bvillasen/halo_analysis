@@ -87,8 +87,9 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   AVG_PARTICLE_SPACING = cbrt(PARTICLE_MASS / (Om*CRITICAL_DENSITY));
 
 
-  PARTICLE_MASS = particle_mass;
-  printf("Particle mass: %e   \n", particle_mass );
+  // PARTICLE_MASS = particle_mass;
+  // printf("Particle mass: %e   \n", particle_mass );
+  
   // printf(" Loading %ld particles\n", nParts_local );
 
 
