@@ -22,6 +22,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   // fprintf(stderr, "Loading CHOLLA file.\n");
 
   hid_t  file_id;
+  herr_t  status;
 
   // open the file
   file_id = H5Fopen(filename, H5F_ACC_RDONLY, H5P_DEFAULT);
