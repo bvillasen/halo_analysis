@@ -106,7 +106,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
 
   hid_t HDF_DatasetID;
   
-  int         *dataset_buffer_ids;
+  long int    *dataset_buffer_ids;
   double      *dataset_buffer_px;
   double      *dataset_buffer_py;
   double      *dataset_buffer_pz;
@@ -179,7 +179,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
 
   
   char dataid_ids[12] = "particle_IDs";
-  dataset_buffer_vz = (long int*) malloc(nParts_local*sizeof(long int));
+  dataset_buffer_ids = (long int*) malloc(nParts_local*sizeof(long int));
   HDF_DatasetID = H5Dopen(HDF_GroupID, dataid_ids);
   if (HDF_DatasetID < 0) {
     fprintf(stderr, "[Error] Failed to open dataset %s/%s in HDF5 file %s!\n", gid, dataid_vz, filename);
@@ -237,6 +237,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   free(dataset_buffer_vx);
   free(dataset_buffer_vy);
   free(dataset_buffer_vz);
+  free(dataset_buffer_ids);
   // free(dataset_buffer_m);
 }
 
