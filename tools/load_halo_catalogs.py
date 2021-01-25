@@ -44,8 +44,13 @@ def load_listFiles( snapshots, outputDir  ):
       ms_halosData[snapshot] = {}
       ms_halosData[snapshot]['nHalos'] = listData.shape[0]
     else:
-      ms_halosData[snapshot] = { headers[i]: listData[:,i] for i in range( nColums ) }
-      ms_halosData[snapshot]['nHalos'] = listData.shape[0]
+      dim = listData.ndim
+      if dim == 1: 
+        ms_halosData[snapshot] = { headers[i]: listData[i] for i in range( nColums ) }
+        ms_halosData[snapshot]['nHalos'] = 1
+      if dim > 1:
+        ms_halosData[snapshot] = { headers[i]: listData[:,i] for i in range( nColums ) }
+        ms_halosData[snapshot]['nHalos'] = listData.shape[0]
   return ms_halosData
 
 

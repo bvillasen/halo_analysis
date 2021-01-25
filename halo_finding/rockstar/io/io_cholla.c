@@ -84,9 +84,11 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
 
   // PARTICLE_MASS = particle_mass;
   PARTICLE_MASS = Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES;
-
   AVG_PARTICLE_SPACING = cbrt(PARTICLE_MASS / (Om*CRITICAL_DENSITY));
-  // printf("Particle mass: %f    %f\n", particle_mass, PARTICLE_MASS );
+
+
+  PARTICLE_MASS = particle_mass;
+  printf("Particle mass: %e   \n", particle_mass );
   // printf(" Loading %ld particles\n", nParts_local );
 
 
@@ -103,6 +105,8 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   }
 
   hid_t HDF_DatasetID;
+  
+  int         *dataset_buffer_px;
   double      *dataset_buffer_px;
   double      *dataset_buffer_py;
   double      *dataset_buffer_pz;
