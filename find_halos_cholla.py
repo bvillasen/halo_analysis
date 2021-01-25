@@ -11,7 +11,7 @@ nProc = MPIcomm.Get_size()
 
 
 dataDir = '/data/groups/comp-astro/bruno/'
-simulationDir = dataDir + 'cosmo_sims/256_dm_50Mpc/'
+simulationDir = dataDir + 'cosmo_sims/256_hydro_50Mpc_halo_tests/'
 inDir = simulationDir + 'output_files/'
 outDir = simulationDir + 'halo_files/'
 if pId == 0: create_directory(outDir)
@@ -25,7 +25,7 @@ rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
 'TOTAL_PARTICLES': 256**3,
 'BOX_SIZE': 50.0,                          #Mpc/h
-'FORCE_RES': 50./256 / 10 ,                    #Mpc/h
+'FORCE_RES': 50./256  ,                    #Mpc/h
 'OUTBASE': outDir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
 }
@@ -34,7 +34,7 @@ parallelConf = {
 'PERIODIC': 1,                                  #periodic boundary conditions
 'INBASE':  inDir ,                              #input directory
 'NUM_BLOCKS': 8,                                # <number of files per snapshot>
-'NUM_SNAPS': 300,                               # <total number of snapshots> 
+'NUM_SNAPS': 259,                               # <total number of snapshots> 
 'STARTING_SNAP': 0,
 'FILENAME': '"<snap>_particles.h5.<block>"',              #"my_sim.<snap>.<block>"
 # 'SNAPSHOT_NAMES': dataDir + 'halos/snaps_names.txt',
