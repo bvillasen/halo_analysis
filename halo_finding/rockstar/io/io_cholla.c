@@ -186,7 +186,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
     fprintf(stderr, "[Error] Failed to open dataset %s/%s in HDF5 file %s!\n", gid, dataid_vz, filename);
     exit(1);
   }
-  status = H5Dread(HDF_DatasetID, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_buffer_ids);
+  status = H5Dread(HDF_DatasetID, H5T_NATIVE_LONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_buffer_ids);
   status = H5Dclose(HDF_DatasetID);
 
   //
