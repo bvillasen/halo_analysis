@@ -34,7 +34,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   int64_t nParts_local;
   double current_a;
   double particle_mass;
-  double hubble_0, Omega_M, Omega_L; 
+  double H0, Omega_M, Omega_L; 
 
   hid_t     attribute_id;
   // attribute_id = H5Aopen(file_id, "nParts_local", H5P_DEFAULT);
@@ -55,7 +55,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   status = H5Aclose(attribute_id);
   
   attribute_id = H5Aopen(file_id, "H0", H5P_DEFAULT);
-  status = H5Aread(attribute_id, H5T_NATIVE_DOUBLE, &hubble_0);
+  status = H5Aread(attribute_id, H5T_NATIVE_DOUBLE, &H0);
   status = H5Aclose(attribute_id);
 
   attribute_id = H5Aopen(file_id, "Omega_M", H5P_DEFAULT);
@@ -71,7 +71,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   // BOX_SIZE = 50.0;
   Om = Omega_M;
   Ol = Omega_L;
-  h0 = hubble_0;                //[km/s / Mpc]
+  h0 = H0 * 10;                //[km/s / Mpc]
   
   
   // printf(" TOTAL_PARTICLES: %ld  \n", TOTAL_PARTICLES );
