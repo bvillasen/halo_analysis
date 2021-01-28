@@ -35,7 +35,7 @@ parallelConf = {
 'INBASE':  inDir ,                              #input directory
 'NUM_BLOCKS': 8,                                # <number of files per snapshot>
 'NUM_SNAPS': 259,                               # <total number of snapshots> 
-'STARTING_SNAP': 63,
+'STARTING_SNAP': 0,
 'FILENAME': '"<snap>_particles.h5.<block>"',              #"my_sim.<snap>.<block>"
 # 'SNAPSHOT_NAMES': dataDir + 'halos/snaps_names.txt',
 # 'BGC2_SNAPNAMES': dataDir + 'halos/snaps_names.txt',
