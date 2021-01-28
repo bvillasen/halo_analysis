@@ -46,7 +46,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   // status = H5Aread(attribute_id, H5T_NATIVE_ULONG, &nParts_total);
   // status = H5Aclose(attribute_id);
 
-  attribute_id = H5Aopen(file_id, "current_a", H5P_DEFAULT);
+  attribute_id = H5Aopen(file_id, "Current_a", H5P_DEFAULT);
   status = H5Aread(attribute_id, H5T_NATIVE_DOUBLE, &current_a);
   status = H5Aclose(attribute_id);
 
