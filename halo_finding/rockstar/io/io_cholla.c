@@ -205,6 +205,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   double colla_vel_conv = sqrt(SCALE_NOW) ;
   for(int i = 0; i < nParts_local; i++) {
     (*p)[i+(*num_p)].id     = dataset_buffer_ids[i];
+    printf("%ld\n", dataset_buffer_ids[i]);
     (*p)[i+(*num_p)].pos[0] = dataset_buffer_pz[i] * colla_legnth_conv;
     (*p)[i+(*num_p)].pos[1] = dataset_buffer_py[i] * colla_legnth_conv;
     (*p)[i+(*num_p)].pos[2] = dataset_buffer_px[i] * colla_legnth_conv;
