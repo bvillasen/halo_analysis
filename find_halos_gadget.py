@@ -29,13 +29,13 @@ rockstarConf = {
 # 'PRELOAD_PARTICLES': 0,
 'FORCE_RES': 9.46e-3,                 #Mpc/h
 # 'FORCE_RES': 115./256,
-'OUTBASE': dataDir + 'halos/',
+'OUTBASE': outDir,
 # 'FULL_PARTICLE_CHUNKS': 1
 }
 parallelConf = {
 'PARALLEL_IO': 1,
 'PERIODIC': 1,                                #non-periodic boundary conditions
-'INBASE':  dataDir ,               #"/directory/where/files/are/located"
+'INBASE':  inDir,               #"/directory/where/files/are/located"
 'NUM_BLOCKS': 1,                              # <number of files per snapshot>
 'NUM_SNAPS': 101,                               # <total number of snapshots>
 'STARTING_SNAP': 0,
