@@ -82,13 +82,13 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   // printf(" Omega_L: %f\n", Ol );
 
 
-  // PARTICLE_MASS = particle_mass;
-  PARTICLE_MASS = Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES;
+  PARTICLE_MASS = particle_mass;
+  // PARTICLE_MASS = Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES;
   AVG_PARTICLE_SPACING = cbrt(PARTICLE_MASS / (Om*CRITICAL_DENSITY));
 
 
   // PARTICLE_MASS = particle_mass;
-  // printf("Particle mass: %e   \n", particle_mass );
+  printf("Particle mass: %e   %e  \n", particle_mass, Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES );
 
   // printf(" Loading %ld particles\n", nParts_local );
 

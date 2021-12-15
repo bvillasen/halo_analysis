@@ -2,136 +2,137 @@ import sys, os
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py as h5
+#Extend path to inclide local modules
+root_dir = os.getcwd() + '/'
+sub_directories = [x[0] for x in os.walk(root_dir)]
+sys.path.extend(sub_directories)
+from tools import *
+from load_halo_catalogs import load_list_file, load_list_file_crocs
 from colossus.cosmology import cosmology
 from colossus.lss import mass_function
 
-root_dir = os.getcwd()
-subDirectories = [x[0] for x in os.walk(root_dir)]
-sys.path.extend(subDirectories)
-sa_dir = os.path.dirname(os.getcwd()) + '/simulation_analysis'  
-subDirectories = [x[0] for x in os.walk(sa_dir)]
-sys.path.extend(subDirectories)
-from tools import *
-from load_halo_catalogs import load_listFiles
-from internal_energy import get_temp
-from cosmo_constants import *
-from mass_function import compute_mass_function
 
+def Get_Mass_Function( h_mass, n_bins=10, bins=None, log_mass=True ):
+  if log_mass: mass_log = np.log10( h_mass )
+  if bins is None: bins = n_bins
+  hist, bin_edges = np.histogram( mass_log, bins=bins )
+  bin_centers = (bin_edges[:-1] + bin_edges[1:])/2
+  n_total = hist.sum()
+  hist_cumul = ( n_total - hist.cumsum() )
+  return bin_centers, hist, hist_cumul
 
-data_dir = '/home/bruno/Desktop/ssd_0/data/'
-simulation_dir = data_dir + 'cosmo_sims/256_dm_50Mpc/'
-halos_dir = simulation_dir + 'halo_files/'
-snapshots_dir = simulation_dir + 'snapshots_Tvir/'
-output_dir   = simulation_dir + 'figures/virial_temperature/'
+simulation_dir = data_dir + '/cosmo_sims/crocs_comparison/rei20A_mr2/'
+input_dir_cholla = simulation_dir + 'halo_files_half_cell_force/'
+input_dir_crocs = simulation_dir + 'crocs_halo_files/'
+output_dir = simulation_dir + 'figures/'
 create_directory( output_dir )
 
+a_vals = np.array([ 0.09, 0.1, 0.1111, 0.12, 0.128, 0.135, 0.14, 0.145, 0.15, 0.155, 0.16 ]) 
+z_vals = 1/a_vals - 1
 
-
+Lbox = 20 #Mpc/h
 
 cosmology.setCosmology('planck18')
 cosmo = cosmology.getCurrent()
 cosmo_h = cosmo.h
 
 
-
-Lbox = 50   #Mpc/h
-rho_mean = cosmo.rho_m(0)  #Mean density h^2 Msun kpc^-3
-rho_crit = cosmo.rho_c(0)  #Mean density h^2 Msun kpc^-3
-M_total = rho_mean * (Lbox*1e3)**3   #h^-1 Msun 
-T_start = 270
-z_start = 100
-
-a_start = 1. / ( z_start + 1 )
-
-M_start = 1e1
-M_end = 1e16
-n_bins = 1000
-
-
-# mass_bins_edges = np.array([ 1.9e11, 1e12 ])
-mass_bins_edges = np.logspace( np.log10(M_start), np.log10(M_end), n_bins+1 )
-mass_bins_edges_log = np.log( mass_bins_edges )
-delta_M = mass_bins_edges[1:] - mass_bins_edges[:-1]
-delta_logM = mass_bins_edges_log[1:] - mass_bins_edges_log[:-1]
-mass_bins = np.sqrt( mass_bins_edges[:-1] * mass_bins_edges[1:] )
-
-z_vals = np.linspace( 0, 20, 11 )
-
-data_mf = {}
-# model = 'tinker08'
-model = 'sheth99'
-for z in z_vals:
-  current_a = 1./ ( z+1 )
-  if model == 'tinker08': dn_dlogM = mass_function.massFunction( mass_bins, z,  model=model, mdef='200m', q_out='dndlnM' )  
-  else: dn_dlogM = mass_function.massFunction( mass_bins, z,  model=model, q_out='dndlnM' )  #Press& Schechter 1974
-  n_halos = dn_dlogM * delta_logM 
-  N_halos = n_halos * Lbox**3
-  cum_N =  N_halos.sum() - N_halos.cumsum()
-  data_mf[z] = {}
-  data_mf[z]['n'] = n_halos
-  data_mf[z]['N'] = N_halos
+data = {}
+for n_snap in range( 2, 12 ):
   
+  print( f'Loading snap: {n_snap}' )
+  halo_catalog_cholla = load_list_file( n_snap, input_dir_cholla )
+  h_mass_cholla = halo_catalog_cholla['Mvir']
 
+  halo_catalog_crocs = load_list_file_crocs( n_snap, input_dir_crocs )
+  h_mass_crocs = halo_catalog_crocs['Mvir(10)']
+  # h_mass_crocs = h_mass_cholla
+
+  m_max = max( h_mass_crocs.max(), h_mass_cholla.max() )
+  m_min = min( h_mass_crocs.min(), h_mass_cholla.min() )
+
+  n_bins = 20
+  bins = np.linspace( np.log10(m_min), np.log10(m_max), n_bins ) 
+  bin_centers, mf_ch, cmf_ch = Get_Mass_Function( h_mass_cholla, bins=bins )
+  bin_centers, mf_cr, cmf_cr = Get_Mass_Function( h_mass_crocs,  bins=bins )
+  data[n_snap] = { 'bin_centers':bin_centers, 'mf_ch':mf_ch, 'mf_cr':mf_cr }
+  
+  bin_centers = 10**bin_centers
+  mass_bins = bin_centers
+  mass_bins_edges_log = bins
+  delta_logM = mass_bins_edges_log[1:] - mass_bins_edges_log[:-1]
+  
+  model = 'tinker08'
+  z = z_vals[n_snap-1]
+  dn_dlogM = mass_function.massFunction( mass_bins, z,  model=model, mdef='200m', q_out='dndlnM' )
+  n_halos = dn_dlogM * delta_logM 
+  N_halos = n_halos * Lbox**3 / cosmo_h
+  data[n_snap]['mf_an'] = N_halos
+
+figure_width = 6
+fig_width =    figure_width
+fig_height =  3*figure_width
+nrows = 4
+ncols = 3
+h_length = 4
+main_length = 3
+
+
+label_size = 14
+figure_text_size = 14
+tick_label_size_major = 15
+tick_label_size_minor = 13
+tick_size_major = 5
+tick_size_minor = 3
+tick_width_major = 1.5
+tick_width_minor = 1
+text_color = 'black'
+legend_font_size = 14
 
 import matplotlib
-import matplotlib.font_manager
+matplotlib.rcParams['font.sans-serif'] = "Helvetica"
+matplotlib.rcParams['font.family'] = "sans-serif"
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
-prop = matplotlib.font_manager.FontProperties( fname=os.path.join('/home/bruno/fonts', "Helvetica.ttf"), size=12)
+
+fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
+plt.subplots_adjust( hspace = 0.15, wspace=0.18)
+
+for i in range(nrows):
+  for j in range(ncols):
+    fig_id = i*ncols + j 
+    if fig_id >= 10: continue
+    ax = ax_l[i][j]
+    
+    n_snap = fig_id + 2
+    data_snap = data[n_snap]
+    bin_centers = data_snap['bin_centers']
+    mf_ch = data_snap['mf_ch']
+    mf_cr = data_snap['mf_cr']
+    mf_an = data_snap['mf_an']
+    ax.plot( bin_centers, mf_cr, label='Crocs' )
+    ax.plot( bin_centers, mf_ch, label='Cholla' )
+    ax.plot( bin_centers, mf_an, '--', c='k', label='Tinker (2008)' )
+  
+    z = z_vals[fig_id+1]
+    ax.text(0.9, 0.93, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+
+    leg = ax.legend(  loc=3, frameon=False, fontsize=legend_font_size    )
+    
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    
+    
+    ax.set_ylabel( r' $N (m = M_{\mathrm{vir}})$', fontsize=label_size, color= text_color )
+    ax.set_xlabel( r'$ M_{\mathrm{vir}}  [h^{-1}M_\odot]$', fontsize=label_size, color= text_color )
+    
+   
+    ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+    ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
 
-nrows = 1
-ncols = 1
-
-font_size = 18
-label_size = 16
-alpha = 0.8
-
-
-
-
-fig, ax = plt.subplots(nrows=nrows, ncols=ncols, figsize=(10*ncols,8*nrows))
-
-for z in z_vals:
-  n = data_mf[z]['n']
-  N = data_mf[z]['N']
-  label = f'$z={z:.1f}$'
-  ax.plot( mass_bins, N, label=label )
-
-
-
-ax.tick_params(axis='both', which='major', direction='in', labelsize=label_size )
-ax.tick_params(axis='both', which='minor', direction='in' )
-ax.set_ylabel( r'$N$  in $50 \,h^{-1}\mathrm{Mpc}$ box', fontsize=font_size  )
-ax.set_xlabel( r'$M_{vir}\,\,\,[\,h^{-1}\,\mathrm{M_\odot}]$', fontsize=font_size )
-leg = ax.legend(loc=1, frameon=False, fontsize=font_size, prop=prop)
-ax.set_xscale('log')
-ax.set_yscale('log')
-
-ax.set_ylim(1e-4, 1e13 )
-
-figure_name = output_dir + f'N_in_box_{model}.png'
-fig.savefig( figure_name, bbox_inches='tight', dpi=300 )
+figure_name = output_dir + 'mass_function_comparison.png'
+fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
-
-
-
-
-# h = 0.6766
-# Lbox = 50000.0 #kpc
-# 
-# 
-
-# 
-# 
-# snapshots = range(290,300)
-# catalogs = load_listFiles( snapshots, halos_dir )
-# 
-# n_snap = 298
-# snap_catalog = catalogs[n_snap]
-# M_vir = snap_catalog['Mvir']
-# mass_func, bin_centers = compute_mass_function( M_vir, n_bins=30 )
-# 
-
 

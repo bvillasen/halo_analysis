@@ -31,6 +31,48 @@ def load_asciiFiles(  snapshots, nFilesPerSnapshot, inputDir,  ):
       halosData[snapshot][headers[i]] = asciiData_out[:,i]
   return halosData
 
+
+def load_list_file( n_snap, outputDir  ):
+  # ms_nHalos = []
+  ms_halosData = {}
+  listFile = outputDir + 'out_{0}.list'.format(n_snap)
+  listString = open( listFile ).read()
+  headers = listString.splitlines()[0][1:].split()
+  nColums = len( headers )
+  listData = np.loadtxt( listFile )
+  if len(listData) == 0:
+    ms_halosData['nHalos'] = listData.shape[0]
+  else:
+    dim = listData.ndim
+    if dim == 1: 
+      ms_halosData = { headers[i]: listData[i] for i in range( nColums ) }
+      ms_halosData['nHalos'] = 1
+    if dim > 1:
+      ms_halosData = { headers[i]: listData[:,i] for i in range( nColums ) }
+      ms_halosData['nHalos'] = listData.shape[0]
+  return ms_halosData
+
+def load_list_file_crocs( n_snap, outputDir  ):
+  # ms_nHalos = []
+  ms_halosData = {}
+  listFile = outputDir + 'hlist_{0:02}.list'.format(n_snap)
+  listString = open( listFile ).read()
+  headers = listString.splitlines()[0][1:].split()
+  nColums = len( headers )
+  listData = np.loadtxt( listFile )
+  if len(listData) == 0:
+    ms_halosData['nHalos'] = listData.shape[0]
+  else:
+    dim = listData.ndim
+    if dim == 1: 
+      ms_halosData = { headers[i]: listData[i] for i in range( nColums ) }
+      ms_halosData['nHalos'] = 1
+    if dim > 1:
+      ms_halosData = { headers[i]: listData[:,i] for i in range( nColums ) }
+      ms_halosData['nHalos'] = listData.shape[0]
+  return ms_halosData
+
+
 def load_listFiles( snapshots, outputDir  ):
   # ms_nHalos = []
   ms_halosData = {}
