@@ -240,7 +240,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   free(dataset_buffer_vx);
   free(dataset_buffer_vy);
   free(dataset_buffer_vz);
-  free(dataset_buffer_ids);
+  // free(dataset_buffer_ids);
   // free(dataset_buffer_m);
 }
 
