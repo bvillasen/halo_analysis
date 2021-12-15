@@ -74,12 +74,12 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   h0 = H0 * 10;                //[km/s / Mpc]
 
 
-  // printf(" TOTAL_PARTICLES: %ld  \n", TOTAL_PARTICLES );
-  // printf(" Box size %f\n", BOX_SIZE );
-  // printf(" current_a: %f\n", SCALE_NOW);
-  // printf(" h0: %f\n", h0);
-  // printf(" Omega_M: %f\n", Om );
-  // printf(" Omega_L: %f\n", Ol );
+  printf(" TOTAL_PARTICLES: %ld  \n", TOTAL_PARTICLES );
+  printf(" Box size %f\n", BOX_SIZE );
+  printf(" current_a: %f\n", SCALE_NOW);
+  printf(" h0: %f\n", h0);
+  printf(" Omega_M: %f\n", Om );
+  printf(" Omega_L: %f\n", Ol );
 
 
   PARTICLE_MASS = particle_mass;
