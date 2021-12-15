@@ -79,6 +79,8 @@ for nSnap in snapshots:
     psi = 1.
     temp_vir = psi/3. * mu * M_p / K_b * G * m_vir / r_vir 
     T_halos = (h_mass * temp_vir).sum()
+    
+    print(f'z: {current_z:.2f}  m_min: {h_mass.min():.3e}')
 
 
   M_igm = M_total - M_halos

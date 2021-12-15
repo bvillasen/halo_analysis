@@ -3,7 +3,7 @@
 
 ## Find Halos 
 
-To find halos in a Cholla particles files using ROCKSTAR first you need to compile ROCKSTAR by running:
+To find halos from Cholla particles files using ROCKSTAR first you need to compile ROCKSTAR by running:
 
 ```
 cd halo_finding/rockstar
