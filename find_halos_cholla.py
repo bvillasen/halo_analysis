@@ -9,7 +9,7 @@ MPIcomm = MPI.COMM_WORLD
 pId = MPIcomm.Get_rank()
 nProc = MPIcomm.Get_size()
 
-simulationDir = dataDir + 'cosmo_sims/crocs_comparison/rei20A_mr2/'
+simulationDir = data_dir + 'cosmo_sims/crocs_comparison/rei20A_mr2/'
 inDir = simulationDir + 'snapshot_files/'
 outDir = simulationDir + 'halo_files/'
 if pId == 0: create_directory(outDir)
