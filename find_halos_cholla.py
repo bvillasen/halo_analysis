@@ -23,7 +23,7 @@ rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
 'TOTAL_PARTICLES': 512**3,
 'BOX_SIZE': 20.0,                          #Mpc/h
-'FORCE_RES': 20./512  ,                    #Mpc/h
+'FORCE_RES': 20./512/2 ,                    #Mpc/h
 'OUTBASE': outDir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
 }
