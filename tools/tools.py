@@ -5,6 +5,13 @@ import numpy as np
 import h5py as h5
 import time
 
+system = None
+system = os.getenv('SYSTEM_NAME')
+if not system:
+  print( 'Can not find the system name')
+  exit(-1)
+# print( f'System: {system}')
+
 if system == 'Eagle':    data_dir = '/media/bruno/ssd_bruno/data/'
 # if system == 'Eagle':    data_dir = '/home/bruno/Desktop/data/'
 if system == 'Tornado':  data_dir = '/home/bruno/Desktop/ssd_0/data/'
