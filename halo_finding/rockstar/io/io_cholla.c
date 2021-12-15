@@ -34,14 +34,14 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   int64_t nParts_local;
   double current_a;
   double particle_mass;
-  double H0, Omega_M, Omega_L; 
+  double H0, Omega_M, Omega_L;
 
   hid_t     attribute_id;
   // attribute_id = H5Aopen(file_id, "nParts_local", H5P_DEFAULT);
   attribute_id = H5Aopen(file_id, "n_particles_local", H5P_DEFAULT);
   status = H5Aread(attribute_id, H5T_NATIVE_ULONG, &nParts_local);
   status = H5Aclose(attribute_id);
-  
+
   // attribute_id = H5Aopen(file_id, "n_particles_total", H5P_DEFAULT);
   // status = H5Aread(attribute_id, H5T_NATIVE_ULONG, &nParts_total);
   // status = H5Aclose(attribute_id);
@@ -53,7 +53,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   attribute_id = H5Aopen(file_id, "particle_mass", H5P_DEFAULT);
   status = H5Aread(attribute_id, H5T_NATIVE_DOUBLE, &particle_mass);
   status = H5Aclose(attribute_id);
-  
+
   attribute_id = H5Aopen(file_id, "H0", H5P_DEFAULT);
   status = H5Aread(attribute_id, H5T_NATIVE_DOUBLE, &H0);
   status = H5Aclose(attribute_id);
@@ -72,8 +72,8 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   Om = Omega_M;
   Ol = Omega_L;
   h0 = H0 * 10;                //[km/s / Mpc]
-  
-  
+
+
   // printf(" TOTAL_PARTICLES: %ld  \n", TOTAL_PARTICLES );
   // printf(" Box size %f\n", BOX_SIZE );
   // printf(" current_a: %f\n", SCALE_NOW);
@@ -89,7 +89,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
 
   // PARTICLE_MASS = particle_mass;
   // printf("Particle mass: %e   \n", particle_mass );
-  
+
   // printf(" Loading %ld particles\n", nParts_local );
 
 
@@ -106,7 +106,7 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   }
 
   hid_t HDF_DatasetID;
-  
+
   long int    *dataset_buffer_ids;
   double      *dataset_buffer_px;
   double      *dataset_buffer_py;
@@ -178,16 +178,16 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   status = H5Dclose(HDF_DatasetID);
 
 
-  
-  char dataid_ids[12] = "particle_IDs";
-  dataset_buffer_ids = (long int*) malloc(nParts_local*sizeof(long int));
-  HDF_DatasetID = H5Dopen(HDF_GroupID, dataid_ids);
-  if (HDF_DatasetID < 0) {
-    fprintf(stderr, "[Error] Failed to open dataset %s/%s in HDF5 file %s!\n", gid, dataid_vz, filename);
-    exit(1);
-  }
-  status = H5Dread(HDF_DatasetID, H5T_NATIVE_LONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_buffer_ids);
-  status = H5Dclose(HDF_DatasetID);
+
+  // char dataid_ids[12] = "particle_IDs";
+  // dataset_buffer_ids = (long int*) malloc(nParts_local*sizeof(long int));
+  // HDF_DatasetID = H5Dopen(HDF_GroupID, dataid_ids);
+  // if (HDF_DatasetID < 0) {
+  //   fprintf(stderr, "[Error] Failed to open dataset %s/%s in HDF5 file %s!\n", gid, dataid_vz, filename);
+  //   exit(1);
+  // }
+  // status = H5Dread(HDF_DatasetID, H5T_NATIVE_LONG, H5S_ALL, H5S_ALL, H5P_DEFAULT, dataset_buffer_ids);
+  // status = H5Dclose(HDF_DatasetID);
 
   //
   // char dataid_m[10] = "mass";
@@ -204,7 +204,8 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   double colla_legnth_conv = 1e-3;
   double colla_vel_conv = sqrt(SCALE_NOW) ;
   for(int i = 0; i < nParts_local; i++) {
-    (*p)[i+(*num_p)].id     = dataset_buffer_ids[i];
+    // (*p)[i+(*num_p)].id     = dataset_buffer_ids[i];
+    (*p)[i+(*num_p)].id     = i;
     // printf("%ld\n ", dataset_buffer_ids[i]);
     (*p)[i+(*num_p)].pos[0] = dataset_buffer_pz[i] * colla_legnth_conv;
     (*p)[i+(*num_p)].pos[1] = dataset_buffer_py[i] * colla_legnth_conv;
