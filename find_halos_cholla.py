@@ -9,37 +9,39 @@ MPIcomm = MPI.COMM_WORLD
 pId = MPIcomm.Get_rank()
 nProc = MPIcomm.Get_size()
 
-simulationDir = data_dir + 'cosmo_sims/crocs_comparison/rei20A_mr2/'
-inDir = simulationDir + 'snapshot_files/'
-outDir = simulationDir + 'halo_files/'
-if pId == 0: create_directory(outDir)
-
+simulation_dir = data_dir + 'cosmo_sims/crocs_comparison/rei40A_mr2/'
+input_dir = simulation_dir + 'snapshot_files/'
+output_dir = simulation_dir + 'halo_files/'
+if pId == 0: create_directory(output_dir)
 
 cwd = os.getcwd()
 rockstarDir = cwd + '/halo_finding/rockstar/'
 rockstarComand = rockstarDir + 'rockstar'
 
+n_points = 1024
+Lbox = 40.0 #Mpc/h
+
 rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
-'TOTAL_PARTICLES': 512**3,
-'BOX_SIZE': 20.0,                          #Mpc/h
-'FORCE_RES': 20./512/2 ,                    #Mpc/h
-'OUTBASE': outDir,                       #output directory
+'TOTAL_PARTICLES': n_points**3,
+'BOX_SIZE': Lbox,                                   #Mpc/h
+'FORCE_RES': Lbox/n_points/100 ,                    #Mpc/h
+'OUTBASE': output_dir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
 }
 parallelConf = {
 'PARALLEL_IO': 1,
 'PERIODIC': 1,                                  #periodic boundary conditions
-'INBASE':  inDir ,                              #input directory
-'NUM_BLOCKS': 8,                                # <number of files per snapshot>
-'NUM_SNAPS': 12,                               # <total number of snapshots>
+'INBASE':  input_dir ,                              #input directory
+'NUM_BLOCKS': 16,                                # <number of files per snapshot>
+'NUM_SNAPS': 11,                               # <total number of snapshots>
 'STARTING_SNAP': 1,
 'FILENAME': '"<snap>_particles.h5.<block>"',              #"my_sim.<snap>.<block>"
 # 'SNAPSHOT_NAMES': dataDir + 'halos/snaps_names.txt',
 # 'BGC2_SNAPNAMES': dataDir + 'halos/snaps_names.txt',
 'NUM_WRITERS': 8,                             #<number of CPUs>
 'FORK_READERS_FROM_WRITERS': 1,
-'FORK_PROCESSORS_PER_MACHINE': 8,             #<number of processors per node>
+'FORK_PROCESSORS_PER_MACHINE': 32,             #<number of processors per node>
 }
 
 if pId == 0:

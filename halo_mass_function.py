@@ -32,8 +32,12 @@ z_vals = 1/a_vals - 1
 
 Lbox = 20 #Mpc/h
 
-cosmology.setCosmology('planck18')
-cosmo = cosmology.getCurrent()
+# cosmology.setCosmology('planck18')
+# cosmo = cosmology.getCurrent()
+
+params = {'flat': True, 'H0': 68.14, 'Om0': 0.3036, 'Ob0': 0.0479, 'sigma8': 0.81, 'ns': 0.95}
+cosmology.addCosmology('myCosmo', params)
+cosmo = cosmology.setCosmology('myCosmo')
 cosmo_h = cosmo.h
 
 
@@ -66,7 +70,7 @@ for n_snap in range( 2, 12 ):
   z = z_vals[n_snap-1]
   dn_dlogM = mass_function.massFunction( mass_bins, z,  model=model, mdef='200m', q_out='dndlnM' )
   n_halos = dn_dlogM * delta_logM 
-  N_halos = n_halos * Lbox**3 / cosmo_h
+  N_halos = n_halos * Lbox**3 / cosmo_h / cosmo_h
   data[n_snap]['mf_an'] = N_halos
 
 figure_width = 6
@@ -113,7 +117,7 @@ for i in range(nrows):
     mf_an = data_snap['mf_an']
     ax.plot( bin_centers, mf_cr, label='Crocs' )
     ax.plot( bin_centers, mf_ch, label='Cholla' )
-    ax.plot( bin_centers, mf_an, '--', c='k', label='Tinker (2008)' )
+    # ax.plot( bin_centers, mf_an, '--', c='k', label='Tinker (2008)' )
   
     z = z_vals[fig_id+1]
     ax.text(0.9, 0.93, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
