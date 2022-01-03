@@ -32,10 +32,12 @@ def load_asciiFiles(  snapshots, nFilesPerSnapshot, inputDir,  ):
   return halosData
 
 
-def load_list_file( n_snap, outputDir  ):
+def load_list_file( n_snap, outputDir, file_name=None  ):
   # ms_nHalos = []
   ms_halosData = {}
-  listFile = outputDir + 'out_{0}.list'.format(n_snap)
+  if file_name is not None: listFile = outputDir + file_name 
+  else: listFile = outputDir + 'out_{0}.list'.format(n_snap)
+  print( f'Loading File: {listFile}')
   listString = open( listFile ).read()
   headers = listString.splitlines()[0][1:].split()
   nColums = len( headers )
@@ -52,14 +54,15 @@ def load_list_file( n_snap, outputDir  ):
       ms_halosData['nHalos'] = listData.shape[0]
   return ms_halosData
 
-def load_list_file_crocs( n_snap, outputDir  ):
+def load_list_file_crocs( file_name   ):
   # ms_nHalos = []
   ms_halosData = {}
-  listFile = outputDir + 'hlist_{0:02}.list'.format(n_snap)
-  listString = open( listFile ).read()
+  # listFile = outputDir + 'hlist_{0:02}.list'.format(n_snap)
+  print( f'Loading File: {file_name}' )
+  listString = open( file_name ).read()
   headers = listString.splitlines()[0][1:].split()
   nColums = len( headers )
-  listData = np.loadtxt( listFile )
+  listData = np.loadtxt( file_name )
   if len(listData) == 0:
     ms_halosData['nHalos'] = listData.shape[0]
   else:
@@ -97,12 +100,11 @@ def load_listFiles( snapshots, outputDir  ):
 
 
 
-def find_parents(snap, box_size, inputDir, rks_dir, outputFile):
+def find_parents(list_file, box_size, outputFile, rks_dir ):
   parents_cmnd = rks_dir + 'util/find_parents'
-  list_file = inputDir + 'out_{0}.list'.format(snap)
   print(' Loading file: ', list_file)
   # print parents_cmnd, list_file, str(box_size), '>', outputFile
-  cmd = '{0} {1} {2:.1f} > {3}'.format( parents_cmnd, list_file, box_size, inputDir + outputFile )
+  cmd = '{0} {1} {2:.1f} > {3}'.format( parents_cmnd, list_file, box_size, outputFile )
   # print cmd
   os.system( cmd )
   print(' Saved file: ', outputFile)

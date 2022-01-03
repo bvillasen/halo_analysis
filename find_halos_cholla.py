@@ -25,7 +25,7 @@ rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
 'TOTAL_PARTICLES': n_points**3,
 'BOX_SIZE': Lbox,                                   #Mpc/h
-'FORCE_RES': Lbox/n_points/100 ,                    #Mpc/h
+'FORCE_RES': Lbox/n_points/50 ,                    #Mpc/h
 'OUTBASE': output_dir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
 }
