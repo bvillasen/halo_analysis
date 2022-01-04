@@ -39,10 +39,11 @@ z_vals = 1/crocs_a_vals - 1
 
 # cholla_files = [ f for f in os.listdir(input_dir_cholla) if '.list' in f ]
 # cholla_files.sort()
-cholla_indices = np.arange( 1, 11, 1 )
+# cholla_indices = np.arange( 1, 11, 1 )
+cholla_indices = np.arange( 1, 2, 1 )
 
 # Get halo/sub_halo category
-get_subhalos = False
+get_subhalos = True
 if get_subhalos:
   print( 'Getting parent IDs')
   for file_indx in cholla_indices:
@@ -66,7 +67,7 @@ data = {}
 snap_id = 0
 for snap_id in range( 0, 10 ):
 
-  # if snap_id > 0: continue
+  if snap_id > 0: continue
 
   print( f'\nLoading snap: {snap_id}' )
   crocs_file = input_dir_crocs + crocs_files[snap_id]
