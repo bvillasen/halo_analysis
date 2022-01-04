@@ -21,9 +21,10 @@ def Get_Mass_Function( h_mass, n_bins=10, bins=None, log_mass=True ):
   hist_cumul = ( n_total - hist.cumsum() )
   return bin_centers, hist, hist_cumul
 
+extra_name = '_over10'
 rockstar_dir = home_dir + 'halo_analysis/halo_finding/rockstar/'
 simulation_dir = data_dir + 'cosmo_sims/crocs_comparison/rei40A_mr2/'
-input_dir_cholla = simulation_dir + 'cholla_halo_files/'
+input_dir_cholla = simulation_dir + f'cholla_halo_files{extra_name}/'
 input_dir_crocs  = simulation_dir + 'crocs_halo_files/'
 output_dir = simulation_dir + 'figures/'
 create_directory( output_dir )
@@ -178,7 +179,7 @@ for i in range(nrows):
     ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
 
-figure_name = output_dir + 'mass_function_comparison.png'
+figure_name = output_dir + f'mass_function_comparison{extra_name}.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
 
