@@ -21,7 +21,7 @@ def Get_Mass_Function( h_mass, n_bins=10, bins=None, log_mass=True ):
   hist_cumul = ( n_total - hist.cumsum() )
   return bin_centers, hist, hist_cumul
 
-extra_name = '_over10'
+extra_name = '_over1'
 rockstar_dir = home_dir + 'halo_analysis/halo_finding/rockstar/'
 simulation_dir = data_dir + 'cosmo_sims/crocs_comparison/rei40A_mr2/'
 input_dir_cholla = simulation_dir + f'cholla_halo_files{extra_name}/'
