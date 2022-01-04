@@ -11,7 +11,7 @@ nProc = MPIcomm.Get_size()
 
 simulation_dir = data_dir + 'cosmo_sims/crocs_comparison/rei40A_mr2/'
 input_dir = simulation_dir + 'snapshot_files/'
-output_dir = simulation_dir + 'cholla_halo_files_over5/'
+output_dir = simulation_dir + 'cholla_halo_files_over10/'
 if pId == 0: create_directory(output_dir)
 
 cwd = os.getcwd()
@@ -25,7 +25,7 @@ rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
 'TOTAL_PARTICLES': n_points**3,
 'BOX_SIZE': Lbox,                                   #Mpc/h
-'FORCE_RES': Lbox/n_points/5 ,                    #Mpc/h
+'FORCE_RES': Lbox/n_points/10 ,                    #Mpc/h
 'OUTBASE': output_dir,                       #output directory
 # 'FULL_PARTICLE_CHUNKS': 1
 }
