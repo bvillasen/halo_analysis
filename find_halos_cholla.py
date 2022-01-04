@@ -11,7 +11,7 @@ nProc = MPIcomm.Get_size()
 
 simulation_dir = data_dir + 'cosmo_sims/crocs_comparison/rei40A_mr2/'
 input_dir = simulation_dir + 'snapshot_files/'
-output_dir = simulation_dir + 'halo_files/'
+output_dir = simulation_dir + 'cholla_halo_files/'
 if pId == 0: create_directory(output_dir)
 
 cwd = os.getcwd()
@@ -34,7 +34,8 @@ parallelConf = {
 'PERIODIC': 1,                                  #periodic boundary conditions
 'INBASE':  input_dir ,                              #input directory
 'NUM_BLOCKS': 16,                                # <number of files per snapshot>
-'NUM_SNAPS': 11,                               # <total number of snapshots>
+'NUM_SNAPS': 2,                                # <number of files per snapshot>
+# 'NUM_SNAPS': 11,                               # <total number of snapshots>
 'STARTING_SNAP': 1,
 'FILENAME': '"<snap>_particles.h5.<block>"',              #"my_sim.<snap>.<block>"
 # 'SNAPSHOT_NAMES': dataDir + 'halos/snaps_names.txt',
