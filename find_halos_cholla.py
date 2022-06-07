@@ -1,6 +1,7 @@
 import sys, os, time
 from subprocess import call
-sys.path.append('tools')
+root_dir = os.getcwd()
+sys.path.append(root_dir + '/tools')
 from tools import *
 extend_path()
 
@@ -9,9 +10,9 @@ MPIcomm = MPI.COMM_WORLD
 pId = MPIcomm.Get_rank()
 nProc = MPIcomm.Get_size()
 
-simulation_dir = data_dir + 'cosmo_sims/crocs_comparison/rei40A_mr2/'
+simulation_dir = data_dir + 'cosmo_sims/wdm_sims/tsc/1024_25Mpc_cdm/cic/'
 input_dir = simulation_dir + 'snapshot_files/'
-output_dir = simulation_dir + 'cholla_halo_files_over10/'
+output_dir = simulation_dir + 'halo_files/'
 if pId == 0: create_directory(output_dir)
 
 cwd = os.getcwd()
@@ -19,7 +20,7 @@ rockstarDir = cwd + '/halo_finding/rockstar/'
 rockstarComand = rockstarDir + 'rockstar'
 
 n_points = 1024
-Lbox = 40.0 #Mpc/h
+Lbox = 25.0 #Mpc/h
 
 rockstarConf = {
 'FILE_FORMAT': '"CHOLLA"',
@@ -33,9 +34,9 @@ parallelConf = {
 'PARALLEL_IO': 1,
 'PERIODIC': 1,                                  #periodic boundary conditions
 'INBASE':  input_dir ,                              #input directory
-'NUM_BLOCKS': 16,                                # <number of files per snapshot>
-'NUM_SNAPS': 11,                               # <total number of snapshots>
-'STARTING_SNAP': 1,
+'NUM_BLOCKS': 128,                                # <number of files per snapshot>
+'NUM_SNAPS': 9,                               # <total number of snapshots>
+'STARTING_SNAP': 0,
 'FILENAME': '"<snap>_particles.h5.<block>"',              #"my_sim.<snap>.<block>"
 # 'SNAPSHOT_NAMES': dataDir + 'halos/snaps_names.txt',
 # 'BGC2_SNAPNAMES': dataDir + 'halos/snaps_names.txt',

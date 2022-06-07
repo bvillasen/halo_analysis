@@ -73,25 +73,18 @@ void load_particles_cholla(char *filename, struct particle **p, int64_t *num_p){
   Ol = Omega_L;
   h0 = H0 * 10;                //[km/s / Mpc]
 
-
-  printf(" TOTAL_PARTICLES: %ld  \n", TOTAL_PARTICLES );
-  printf(" Box size %f\n", BOX_SIZE );
-  printf(" current_a: %f\n", SCALE_NOW);
-  printf(" h0: %f\n", h0);
-  printf(" Omega_M: %f\n", Om );
-  printf(" Omega_L: %f\n", Ol );
-
-
-  PARTICLE_MASS = particle_mass;
-  // PARTICLE_MASS = Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES;
+  // PARTICLE_MASS = particle_mass;
+  PARTICLE_MASS = Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES; //Use Omega_M to compute the particle mass (ignores baryons!)
   AVG_PARTICLE_SPACING = cbrt(PARTICLE_MASS / (Om*CRITICAL_DENSITY));
 
-
-  // PARTICLE_MASS = particle_mass;
-  printf("Particle mass: %e   %e  \n", particle_mass, Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES );
-
+  // printf(" TOTAL_PARTICLES: %ld  \n", TOTAL_PARTICLES );
+  // printf(" Box size %f\n", BOX_SIZE );
+  // printf(" current_a: %f\n", SCALE_NOW);
+  // printf(" h0: %f\n", h0);
+  // printf(" Omega_M: %f\n", Om );
+  // printf(" Omega_L: %f\n", Ol );
+  // printf("Particle mass: %e   %e  \n", particle_mass, Om*CRITICAL_DENSITY * pow(BOX_SIZE, 3) / TOTAL_PARTICLES );
   // printf(" Loading %ld particles\n", nParts_local );
-
 
   check_realloc_s((*p), ((*num_p) + nParts_local), sizeof(struct particle));
   // printf("  Particles allocated: %ld \n", *num_p + nParts_local);

@@ -64,25 +64,30 @@ cosmo = cosmology.setCosmology('myCosmo')
 cosmo_h = cosmo.h
 
 crocs_raw = False
-exclude_subhalos = True
+exclude_subhalos = False
 print( f'Crocs Raw: {crocs_raw}' )
 print( f'Exclude Subhalos: {exclude_subhalos}')
 
+snap_id_to_load = 9
+
 data = {}
-snap_id = 0
 for snap_id in range( 0, 10 ):
 
-  # if snap_id > 1: continue
+  if snap_id != snap_id_to_load: continue
 
   print( f'\nLoading snap: {snap_id}' )
   crocs_file = input_dir_crocs + crocs_files[snap_id]
   halo_catalog_crocs = load_list_file_crocs( crocs_file )
   h_mass_crocs = halo_catalog_crocs['Mvir(10)']
   p_ids = halo_catalog_crocs['pid(5)']
+  cr_x = halo_catalog_crocs['x(17)']
+  cr_y = halo_catalog_crocs['y(18)']
+  cr_z = halo_catalog_crocs['z(19)']
   halos = np.where( p_ids < 0  )[0]
   subhalos = np.where( p_ids >= 0  )[0]
   print( f'Subhalos/Halos: {len(subhalos)/len(halos)}')  
-  if exclude_subhalos: h_mass_crocs = h_mass_crocs[halos]
+  if exclude_subhalos: 
+    h_mass_crocs = h_mass_crocs[halos]
   
   
   if not crocs_raw: h_mass_crocs /= cosmo_h
@@ -93,43 +98,34 @@ for snap_id in range( 0, 10 ):
   halo_catalog_cholla = load_list_file( cholla_indx, input_dir_cholla, file_name=file_name )
   h_mass_cholla = halo_catalog_cholla['Mvir']
   p_ids = halo_catalog_cholla['PID']
+  ch_x = halo_catalog_cholla['X']
+  ch_y = halo_catalog_cholla['Y']
+  ch_z = halo_catalog_cholla['Z']
   halos = np.where( p_ids < 0  )[0]
   subhalos = np.where( p_ids >= 0  )[0]
   print( f'Subhalos/Halos: {len(subhalos)/len(halos)}')  
-  if exclude_subhalos: h_mass_cholla = h_mass_cholla[halos]
-  h_mass_cholla = h_mass_cholla[h_mass_cholla >= min_mass ]
-
+  if exclude_subhalos: 
+    h_mass_cholla = h_mass_cholla[halos]
+  # h_mass_cholla = h_mass_cholla[h_mass_cholla >= min_mass ]
+    
   n_halos_ch = len(h_mass_cholla)
   n_halos_cr = len(h_mass_crocs)
   print( f'N halos cholla: {n_halos_ch}' )
   print( f'N halos crocs:  {n_halos_cr}' )
 
-  m_max = max( h_mass_crocs.max(), h_mass_cholla.max() )
-  m_min = min( h_mass_crocs.min(), h_mass_cholla.min() )
+  max_id_cr = np.where( h_mass_crocs == h_mass_crocs.max() )[0]
+  max_id_ch = np.where( h_mass_cholla == h_mass_cholla.max() )[0]
+  
+  data[snap_id] = { 'crocs' :{'x':cr_x, 'y':cr_y, 'z':cr_z, 'm':h_mass_crocs },
+                    'cholla':{'x':ch_x, 'y':ch_y, 'z':ch_z, 'm':h_mass_cholla } }
 
-  n_bins = 20
-  bins = np.linspace( np.log10(m_min), np.log10(m_max), n_bins ) 
-  bin_centers, mf_ch, cmf_ch = Get_Mass_Function( h_mass_cholla, bins=bins )
-  bin_centers, mf_cr, cmf_cr = Get_Mass_Function( h_mass_crocs,  bins=bins )
-  data[snap_id] = { 'bin_centers':bin_centers, 'mf_ch':mf_ch, 'mf_cr':mf_cr }
-
-
-  # mass_bins = bin_centers
-  # mass_bins_edges_log = bins
-  # delta_logM = mass_bins_edges_log[1:] - mass_bins_edges_log[:-1]
-  # model = 'tinker08'
-  # z = z_vals[snap_id]
-  # dn_dlogM = mass_function.massFunction( mass_bins, z,  model=model, mdef='200m', q_out='dndlnM' )
-  # n_halos = dn_dlogM * delta_logM 
-  # N_halos = n_halos * Lbox**3 
-  # data[snap_id]['mf_an'] = N_halos
 
 
 figure_width = 6
 fig_width =    figure_width
-fig_height =  3*figure_width
-nrows = 4
-ncols = 3
+fig_height =  0.5*figure_width
+nrows = 1
+ncols = 2
 h_length = 4
 main_length = 3
 
@@ -152,47 +148,62 @@ matplotlib.rcParams['mathtext.fontset'] = 'cm'
 matplotlib.rcParams['mathtext.rm'] = 'serif'
 
 
+
+snap_id = snap_id_to_load
+
+delta_logM = 1
+
+m_cr = data[snap_id]['crocs']['m']
+m_ch = data[snap_id]['cholla']['m']
+mass_h = max( m_cr.max(), m_ch.max() )
+mass_l = 10**( np.log10(mass_h) - delta_logM )
+
 fig, ax_l = plt.subplots(nrows=nrows, ncols=ncols, figsize=(figure_width*ncols,6*nrows))
 plt.subplots_adjust( hspace = 0.15, wspace=0.18)
 
-for i in range(nrows):
-  for j in range(ncols):
-    fig_id = i*ncols + j 
+ax = ax_l[0]
+data_sim = data[snap_id]['crocs']
+m = data_sim['m']
+indices = (m >= mass_l) * (m<=mass_h)
+x = data_sim['x'][indices]
+y = data_sim['y'][indices]
+z = data_sim['z'][indices]
+m = data_sim['m'][indices]
+s = np.log10(m)
+ax.scatter( x, y, s=s  )
 
-    if fig_id  not in data.keys(): continue
-
-    ax = ax_l[i][j]
-
-    n_snap = fig_id 
-    data_snap = data[n_snap]
-    bin_centers = data_snap['bin_centers']
-    mf_ch = data_snap['mf_ch']
-    mf_cr = data_snap['mf_cr']
-    ax.plot( bin_centers, mf_cr, label='Crocs' )
-    ax.plot( bin_centers, mf_ch, label='Cholla' )
-    # mf_an = data_snap['mf_an']
-    # ax.plot( bin_centers, mf_an, '--', c='k', label='Tinker (2008)' )
-
-    z = z_vals[fig_id]
-    ax.text(0.9, 0.93, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
-
-    leg = ax.legend(  loc=3, frameon=False, fontsize=legend_font_size    )
-
-    ax.set_xscale('log')
-    ax.set_yscale('log')
+ax = ax_l[1]
+data_sim = data[snap_id]['cholla']
+m = data_sim['m']
+indices = (m >= mass_l) * (m<=mass_h)
+x = data_sim['x'][indices]
+y = data_sim['y'][indices]
+z = data_sim['z'][indices]
+m = data_sim['m'][indices]
+s = np.log10(m) 
+ax.scatter( z, y, s=s  )
 
 
-    ax.set_ylabel( r' $N (M = M_{\mathrm{vir}})$', fontsize=label_size, color= text_color )
-    ax.set_xlabel( r'$ M_{\mathrm{vir}}  [h^{-1}M_\odot]$', fontsize=label_size, color= text_color )
+
+z = z_vals[snap_id]
+ax.text(0.9, 0.93, r'$z=${0:.1f}'.format(z), horizontalalignment='center',  verticalalignment='center', transform=ax.transAxes, fontsize=figure_text_size, color=text_color) 
+
+leg = ax.legend(  loc=3, frameon=False, fontsize=legend_font_size    )
 
 
-    ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
-    ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
 
 
-figure_name = output_dir + f'mass_function_comparison'
+# ax.set_ylabel( r' $N (M = M_{\mathrm{vir}})$', fontsize=label_size, color= text_color )
+# ax.set_xlabel( r'$ M_{\mathrm{vir}}  [h^{-1}M_\odot]$', fontsize=label_size, color= text_color )
+# 
+
+ax.tick_params(axis='both', which='major', color=text_color, labelcolor=text_color, labelsize=tick_label_size_major, size=tick_size_major, width=tick_width_major, direction='in' )
+ax.tick_params(axis='both', which='minor', color=text_color, labelcolor=text_color, labelsize=tick_label_size_minor, size=tick_size_minor, width=tick_width_minor, direction='in')
+
+
+figure_name = output_dir + f'halo_positions'
 if crocs_raw: figure_name += '_crocs_raw'
-if exclude_subhalos: figure_name += 'nosubhalos'
+if exclude_subhalos: figure_name += '_nosubhalos'
 figure_name += '.png'
 fig.savefig( figure_name, bbox_inches='tight', dpi=300, facecolor=fig.get_facecolor() )
 print( f'Saved Figure: {figure_name}' )
