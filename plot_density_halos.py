@@ -22,6 +22,7 @@ base_dir = data_dir + f'cosmo_sims/wdm_sims/tsc/'
 sim_dir  = base_dir + f'{sim_name}/{density_type}/'
 input_dir = sim_dir + 'snapshot_files/'
 halos_dir = sim_dir + 'halo_files/'
+fonts_dir = root_dir + '/fonts/'
 output_dir = root_dir + '/'
 create_directory( output_dir )
 
@@ -45,8 +46,8 @@ halo_pos_z = halo_data['Z'][indices]
 halo_radius = halo_data['Rvir'][indices] * 1e-3 #convert to Mpc/h
 halo_radius = halo_radius**2 * 70  #Increase the size for image, the units in the image are pixel^2
 
-data_type = 'hydro'
 # data_type = 'particles'
+data_type = 'hydro'
 snap_data = load_snapshot_data_distributed( data_type, fields,  snap_id, input_dir,  box_size, grid_size, precision  )
 z = snap_data['Current_z']
 density = snap_data['density']
@@ -60,7 +61,7 @@ log_proj = np.log10( proj )
 label_size = 12
 
 import matplotlib
-matplotlib.font_manager.findSystemFonts(fontpaths=['fonts/Helvetica'], fontext='ttf')
+matplotlib.font_manager.findSystemFonts(fontpaths=[fonts_dir], fontext='ttf')
 matplotlib.rcParams['font.sans-serif'] = "Helvetica"
 matplotlib.rcParams['font.family'] = "sans-serif"
 matplotlib.rcParams['mathtext.fontset'] = 'cm'
