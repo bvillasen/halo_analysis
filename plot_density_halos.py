@@ -22,7 +22,7 @@ base_dir = data_dir + f'cosmo_sims/wdm_sims/tsc/'
 sim_dir  = base_dir + f'{sim_name}/{density_type}/'
 input_dir = sim_dir + 'snapshot_files/'
 halos_dir = sim_dir + 'halo_files/'
-output_dir = sim_dir + 'figures/'
+output_dir = root_dir + '/'
 create_directory( output_dir )
 
 Lbox = L_Mpc * 1e3    #kpc/h
