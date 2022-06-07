@@ -17,6 +17,7 @@ L_Mpc = 25
 sim_name = f'{n_cells}_{L_Mpc}Mpc_cdm'
 density_type = 'cic'
 
+data_dir = '/data/groups/comp-astro/bruno/'
 base_dir = data_dir + f'cosmo_sims/wdm_sims/tsc/'
 sim_dir  = base_dir + f'{sim_name}/{density_type}/'
 input_dir = sim_dir + 'snapshot_files/'
